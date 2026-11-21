@@ -91,9 +91,14 @@ a { color: #fff; text-decoration: underline; text-transform: lowercase; }
   border: 0;
   background: none;
   cursor: pointer;
-  animation: logo-spin 20s linear infinite;
 }
 .logo svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.logo polygon { transform-box: fill-box; transform-origin: center; }
+.logo .spin {
+  transform-box: view-box;
+  transform-origin: 202.7px 201px; /* middle of the three triangles */
+  animation: logo-spin 20s linear infinite;
+}
+/* each triangle turns around its own centre (set inline per polygon) */
+.logo polygon { transform-box: view-box; }
 @keyframes logo-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .logo { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .logo .spin { animation: none; } }
