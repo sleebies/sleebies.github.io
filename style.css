@@ -121,3 +121,9 @@ a { color: #fff; text-decoration: none; text-transform: lowercase; }
 .profile dt { color: #888; font-size: 0.9rem; margin-top: 14px; }
 .profile dd { margin: 2px 0 0; }
 .profile p { text-align: left; line-height: 1.5; }
+.name { text-transform: none; }  /* character names keep their capitals */
+.profile .portrait.empty {
+  height: min(240px, 60vw);
+  border: 2px dashed #444;
+}
+.profile .hint { text-align: center; }
