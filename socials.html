@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sleepyz2002 · socials</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>socials</h1>
+
+  <!-- Hover images: swap the data-img URLs for whatever pictures you want. -->
+  <nav class="links">
+    <a href="https://www.youtube.com/@sleebies" target="_blank" rel="noopener"
+       data-img="https://i.postimg.cc/k75gCHY8/youtubez.png">youtube</a>
+    <a href="https://www.tiktok.com/@sleeebies" target="_blank" rel="noopener"
+       data-img="https://i.postimg.cc/Gdg1Fmz8/tiktokz.png">tiktok</a>
+    <a href="#" id="discord" title="copy discord username"
+       data-img="https://i.postimg.cc/HWCLCsFs/discordz.png">discord</a>
+  </nav>
+  <img class="preview" id="preview" alt="">
+  <div class="corner"><a href="./">back</a></div>
+
+  <script>
+    const preview = document.getElementById('preview');
+    document.querySelectorAll('[data-img]').forEach(a => {
+      const show = () => { preview.src = a.dataset.img; preview.classList.add('show'); };
+      const hide = () => preview.classList.remove('show');
+      a.addEventListener('mouseenter', show);
+      a.addEventListener('focus', show);
+      a.addEventListener('mouseleave', hide);
+      a.addEventListener('blur', hide);
+    });
+    // Discord has no public profile link, so clicking copies the username.
+    const d = document.getElementById('discord');
+    d.addEventListener('click', e => {
+      e.preventDefault();
+      const name = 'sleepyzdotexe';
+      (navigator.clipboard ? navigator.clipboard.writeText(name) : Promise.reject())
+        .then(() => { d.textContent = 'copied: @' + name; })
+        .catch(() => { d.textContent = '@' + name; });
+      setTimeout(() => { d.textContent = 'discord'; }, 2000);
+    });
+  </script>
+</body>
+</html>

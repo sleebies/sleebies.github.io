@@ -1,20 +1,52 @@
-<style>
-body {
-  background-color: black;
-}
-</style>
-
-<body class="body">
-<h1 style="color:white;">welcome to sleepyz2002dotcom</h1>
-<body>
-<a href="https://sleebies.github.io/sleepyz2002/"><img src="https://i.postimg.cc/r8LxQMwc/sleepyz.png" alt="sleepyz" width="500" height="333">
-<br>
-<a href="linktree.html"><img src="https://i.postimg.cc/HWCLCsFs/discordz.png" alt="discordz" width="500" height="333"></a>
-<br>
-<a href="linktree2.html"><img src="https://i.postimg.cc/k75gCHY8/youtubez.png" alt="youtubez" width="500" height="333"></a>
-<br>
-<a href="linktree3.html"><img src="https://i.postimg.cc/Gdg1Fmz8/tiktokz.png" alt="tiktokz" width="500" height="333">
-</body>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>sleepyz2002</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>welcome to sleepyz2002dotcom</h1>
+  <main class="stage">
+    <div class="slideshow" id="slideshow"></div>
+    <nav class="links">
+      <a href="photos.html">photos</a>
+      <a href="videos.html">videos</a>
+    </nav>
+  </main>
+  <div class="corner left"><a href="socials.html">go to sleepyz</a></div>
+
+  <script>
+    // To add or remove slideshow pictures, put them in the slideshow folder and list them here.
+    const IMAGES = [
+      'cupcakez.png',
+      'fone-linging.png',
+      'panda-smoking.png',
+      'shaman-healer.png',
+      'unc.png',
+    ];
+    const SECONDS = 8;
+
+    const box = document.getElementById('slideshow');
+    const imgs = IMAGES.map(name => {
+      const img = document.createElement('img');
+      img.src = 'slideshow/' + name;
+      img.alt = '';
+      box.appendChild(img);
+      return img;
+    });
+    let current = Math.floor(Math.random() * imgs.length);
+    imgs[current].classList.add('on');
+    if (imgs.length > 1) {
+      setInterval(() => {
+        let next;
+        do { next = Math.floor(Math.random() * imgs.length); } while (next === current);
+        imgs[current].classList.remove('on');
+        imgs[next].classList.add('on');
+        current = next;
+      }, SECONDS * 1000);
+    }
+  </script>
+</body>
+</html>
