@@ -7,31 +7,35 @@
   <link rel="stylesheet" href="style.css">
   <script src="songs.js"></script>
   <script src="music.js"></script>
+  <script src="photos.js"></script>
 </head>
-<body>
+<body class="corkboard-page">
   <h1>photos</h1>
-  <div class="gallery" id="gallery"></div>
+  <!-- Photos: drop them in the photos folder. The list (photos.js) builds itself. -->
+  <div class="corkboard" id="board"></div>
   <div class="lightbox" id="lightbox"><img alt=""></div>
   <div class="corner left"><a href="./">back</a></div>
 
   <script>
-    // To add a photo: put it in the photos folder and list it here.
-    // Optional caption: { file: 'name.jpg', cap: 'words' }
-    const PHOTOS = [
-    ];
-
-    const g = document.getElementById('gallery');
+    const board = document.getElementById('board');
     const lb = document.getElementById('lightbox');
-    if (!PHOTOS.length) g.outerHTML = '<p class="empty-note">coming soon</p>';
-    PHOTOS.forEach(p => {
-      if (typeof p === 'string') p = { file: p };
-      const fig = document.createElement('div');
+    // same file always lands at the same tilt, so the board doesn't reshuffle on every visit
+    function hash(s) { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return (h >>> 0) / 4294967296; }
+    if (!PHOTOS.length) board.innerHTML = '<p class="empty-note">nothing pinned yet</p>';
+    PHOTOS.forEach(name => {
+      const r = hash(name), r2 = hash(name + '!');
+      const pin = document.createElement('figure');
+      pin.className = 'pinned';
+      pin.style.setProperty('--tilt', ((r - 0.5) * 14).toFixed(1) + 'deg');
+      pin.style.setProperty('--nudge', ((r2 - 0.5) * 30).toFixed(0) + 'px');
+      pin.style.setProperty('--pin', (35 + r2 * 30).toFixed(0) + '%');
       const img = document.createElement('img');
-      img.src = 'photos/' + p.file; img.alt = p.cap || ''; img.loading = 'lazy';
-      img.onclick = () => { lb.firstElementChild.src = img.src; lb.classList.add('show'); };
-      fig.appendChild(img);
-      if (p.cap) { const c = document.createElement('div'); c.className = 'cap'; c.textContent = p.cap; fig.appendChild(c); }
-      g.appendChild(fig);
+      img.src = 'photos/' + encodeURIComponent(name);
+      img.alt = '';
+      img.loading = 'lazy';
+      pin.appendChild(img);
+      pin.onclick = () => { lb.firstElementChild.src = img.src; lb.classList.add('show'); };
+      board.appendChild(pin);
     });
     lb.onclick = () => lb.classList.remove('show');
   </script>

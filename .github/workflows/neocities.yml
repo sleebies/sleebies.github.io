@@ -20,12 +20,11 @@ jobs:
 
       - name: Collect site files
         run: |
-          # rebuild the slideshow list from whatever is in the slideshow folder
-          python3 -c "import json,os; f=sorted(n for n in os.listdir('slideshow') if n.lower().endswith(('.png','.jpg','.jpeg','.gif','.webp'))); open('slideshow.js','w').write('// List of home page slideshow pictures. Built automatically from the slideshow folder, no need to edit by hand.\\nconst IMAGES = [\\n' + ''.join('  ' + json.dumps(n) + ',\\n' for n in f) + '];\\n')"
+          # rebuild the slideshow, photo and video lists from their folders
+          python3 build-lists.py
           mkdir _site
           cp *.html *.css *.js _site/
           cp -r slideshow souls images photos _site/
-          rm -f _site/photos/.gitkeep
 
       - name: Upload to Neocities
         uses: bcomnes/deploy-to-neocities@v3

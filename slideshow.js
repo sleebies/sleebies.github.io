@@ -1,4 +1,4 @@
-// List of home page slideshow pictures. Built automatically from the slideshow folder, no need to edit by hand.
+// Built automatically from the slideshow folder, no need to edit by hand.
 const IMAGES = [
   "0x0u26kjgux81.png",
   "1776297276103.jpg",

@@ -71,6 +71,7 @@
     frame.src = location.href;
 
     var audio = new Audio();
+    window.sleepyzAudio = audio;   // handy for poking at it from the console
     audio.preload = 'auto';
     // Songs hosted on another site need this so the muffle effect can hear them.
     if (/^https?:/.test(BASE) && new URL(BASE).origin !== location.origin) audio.crossOrigin = 'anonymous';
@@ -171,6 +172,19 @@
       })(t0);
     }
 
+    // slowly fade the music to silence (on) or back up to the slider's level (off)
+    var ducked = false;
+    function duck(on) {
+      ducked = on;
+      cancelAnimationFrame(fading);
+      var from = audio.volume, to = on ? 0 : $('mp-volume').value / 100, t0 = performance.now();
+      (function step(now) {
+        var k = Math.min(1, (now - t0) / 1500);
+        audio.volume = Math.min(1, Math.max(0, from + (to - from) * k));
+        if (k < 1) fading = requestAnimationFrame(step);
+      })(t0);
+    }
+
     /* --- muffle: off the home page the music sounds like it's in another room --- */
     var ctx = null, filter = null, muffled = false;
     function isHome(href) {
@@ -212,8 +226,10 @@
         document.title = e.data.title;
         try { history.replaceState(null, '', e.data.href); } catch (err) {}
         setMuffle(!isHome(e.data.href));
+        if (ducked) duck(false);             // leaving a video brings the music back
       }
-      if (e.data.sleepyz === 'pause') audio.pause();   // a video on the page started playing
+      if (e.data.sleepyz === 'pause') audio.pause();
+      if (e.data.sleepyz === 'duck') duck(!!e.data.on);  // videos page: fade the music out / back in
     });
 
     /* --- splash: the click that lets the browser play sound --- */

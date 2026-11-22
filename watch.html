@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sleepyz2002 · video</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="songs.js"></script>
+  <script src="music.js"></script>
+</head>
+<body>
+  <h1 id="title">video</h1>
+  <main class="watch">
+    <video id="player" controls autoplay playsinline></video>
+  </main>
+  <div class="corner left"><a href="videos.html">back</a></div>
+
+  <script>
+    const VIDEO_BASE = 'https://sleebies.github.io/videos/';
+    const file = new URLSearchParams(location.search).get('v') || '';
+    const name = file.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+    document.getElementById('title').textContent = name || 'video';
+    document.title = 'sleepyz2002 · ' + (name || 'video');
+    const p = document.getElementById('player');
+    if (file) p.src = VIDEO_BASE + encodeURIComponent(file);
+    // the home music fades out while a video is open, and comes back when you leave
+    if (parent !== window) parent.postMessage({ sleepyz: 'duck', on: true }, '*');
+    p.play().catch(() => {});
+  </script>
+</body>
+</html>
