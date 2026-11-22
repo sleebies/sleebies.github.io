@@ -59,7 +59,6 @@
           '<path class="mp-waves" d="M11 5.5a3.5 3.5 0 0 1 0 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>' +
         '</button>' +
         '<input id="mp-volume" type="range" min="0" max="100" value="70" aria-label="volume">' +
-        '<button id="mp-muffle" type="button" aria-pressed="false">muffle</button>' +
         '<button id="mp-list-toggle" type="button">songs</button>' +
         '<ol id="mp-list" hidden></ol>' +
       '</div>' +
@@ -172,25 +171,30 @@
       })(t0);
     }
 
-    /* --- muffle: "music in the other room" via a low-pass filter --- */
-    var ctx = null, filter = null;
-    function setMuffle(on) {
-      if (on && !ctx) {
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return;
-        ctx = new AC();
-        filter = ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.Q.value = 0.7;
-        ctx.createMediaElementSource(audio).connect(filter);
-        filter.connect(ctx.destination);
-      }
-      if (filter) filter.frequency.setTargetAtTime(on ? 500 : 22000, ctx.currentTime, 0.15);
-      $('mp-muffle').setAttribute('aria-pressed', on ? 'true' : 'false');
-      $('mp-muffle').classList.toggle('on', on);
-      store.set('muffle', on);
+    /* --- muffle: off the home page the music sounds like it's in another room --- */
+    var ctx = null, filter = null, muffled = false;
+    function isHome(href) {
+      var path = new URL(href).pathname;
+      var root = new URL(SITE_ROOT).pathname;
+      return path === root || path === root + 'index.html';
     }
-    $('mp-muffle').onclick = function () { setMuffle($('mp-muffle').getAttribute('aria-pressed') !== 'true'); };
+    function startAudioGraph() {   // must run inside a click, so it happens on the splash
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC || ctx) return;
+      ctx = new AC();
+      filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.Q.value = 0.7;
+      filter.frequency.value = muffled ? 500 : 20000;
+      ctx.createMediaElementSource(audio).connect(filter);
+      filter.connect(ctx.destination);
+    }
+    function setMuffle(on) {
+      muffled = on;
+      document.body.classList.toggle('mp-away', on);   // style.css hides the controls off the home page
+      if (filter) filter.frequency.setTargetAtTime(on ? 500 : 20000, ctx.currentTime, 0.25);
+    }
+    setMuffle(!isHome(location.href));
 
     /* --- song list --- */
     SONGS.forEach(function (s, i) {
@@ -207,6 +211,7 @@
       if (e.data.sleepyz === 'page') {
         document.title = e.data.title;
         try { history.replaceState(null, '', e.data.href); } catch (err) {}
+        setMuffle(!isHome(e.data.href));
       }
     });
 
@@ -218,7 +223,7 @@
       splash.classList.add('gone');                         // CSS fades it out
       setTimeout(function () { splash.remove(); }, 1500);
       if (!SONGS.length) return;
-      if (store.get('muffle') === true) setMuffle(true);
+      startAudioGraph();
       var begin = function () {
         // start somewhere between 15% and 60% into the song so it fades in mid-flow
         if (audio.duration) audio.currentTime = audio.duration * (0.15 + Math.random() * 0.45);
