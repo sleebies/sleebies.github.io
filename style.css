@@ -228,9 +228,20 @@ body.mp-away #mp-bar { display: none; }
 #mp-list li.on { color: #ff0000; }
 #mp-list[hidden] { display: none; }
 
-/* phones: the corners are tight, so the bar sits above them */
+/* phones: the page fills the screen and the controls sit just below it,
+   so you scroll down a little to reach them and they never cover anything */
 @media (max-width: 600px) {
-  #mp-bar { bottom: 84px; max-width: calc(100vw - 32px); }
+  html:has(body.mp-shell), body.mp-shell { height: auto; overflow: visible; }
+  #mp-page { position: relative; height: 100vh; height: 100svh; }
+  #mp-bar {
+    position: static;
+    transform: none;
+    max-width: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px;
+    white-space: normal;
+  }
 }
 /* splash screen: the click that lets the browser play music */
 #mp-splash {
