@@ -1,0 +1,32 @@
+# Publishes the site to Neocities (sleepyz2002.neocities.org) on every push to main.
+# Needs a repo secret named NEOCITIES_API_TOKEN (your Neocities API key).
+name: Deploy to Neocities
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: neocities
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Collect site files
+        run: |
+          mkdir _site
+          cp *.html *.css _site/
+          cp -r slideshow souls _site/
+
+      - name: Upload to Neocities
+        uses: bcomnes/deploy-to-neocities@v3
+        with:
+          api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
+          dist_dir: _site
+          cleanup: true
