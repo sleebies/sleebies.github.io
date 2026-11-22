@@ -1,4 +1,4 @@
-// Built automatically from the videos folder, no need to edit by hand.
+// Built automatically from the videos folder (date = when it was added), no need to edit by hand.
 const VIDEOS = [
-  "intro_1_ntsc.mp4",
+  {"file": "intro_1_ntsc.mp4", "date": "2026-11-22"},
 ];
