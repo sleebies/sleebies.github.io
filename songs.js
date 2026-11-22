@@ -24,7 +24,6 @@ window.SONGS = [
   {"file": "020.mp3", "title": "Baby One More Time - Britney Spears"},
   {"file": "021.mp3", "title": "Baby One More Time (from Kung Fu Panda 4) - Tenacious D"},
   {"file": "022.mp3", "title": "BABYBABYの夢 - TANUKI"},
-  {"file": "023.mp3", "title": "Be Alone - The Living Tombstone"},
   {"file": "024.mp3", "title": "BIOS - Zorrovian"},
   {"file": "025.mp3", "title": "BLOODY STREAM - Coda"},
   {"file": "026.mp3", "title": "BRAZILIAN DANÇA PHONK - 6YNTHMANE, RXDXVIL"},
