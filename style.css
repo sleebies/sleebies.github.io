@@ -348,25 +348,27 @@ body.mp-away #mp-bar { display: none; }
   .corkboard { border-width: 8px; padding: 28px 10px 36px; margin: 16px 8px 80px; }
 }
 
-/* ---------- videos: list of clips, previews play on hover ---------- */
-.vidlist {
-  max-width: 1000px;
-  margin: 24px auto 80px;
-  padding: 0 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 20px;
-  justify-content: flex-start;
+/* ---------- videos: plain dated list, newest first ---------- */
+.videos-page h1 { text-align: left; padding: 16px 16px 0; font-size: 1.6rem; }
+.vidlist { margin: 20px 0 80px 14px; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+.vidlist td { padding: 2px 6px; vertical-align: top; }
+.vidlist td:first-child { color: #ccc; white-space: nowrap; }
+.vidlist a:hover { color: #ff0000; }
+.vidpeek {
+  position: fixed;
+  width: 280px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #111;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 3;
 }
-.vid { display: flex; flex-direction: column; align-items: flex-start; width: 220px; }
-.vid video { width: 220px; aspect-ratio: 4 / 3; object-fit: cover; background: #111; display: block; }
-.vid span { margin-top: 6px; font-size: 0.95rem; text-align: left; }
-.vid:hover span { color: #ff0000; }
+.vidpeek.show { opacity: 1; }
 @media (max-width: 600px) {
-  .vidlist { justify-content: center; }
-  .vid { align-items: center; width: min(320px, 90vw); }
-  .vid video { width: 100%; }
-  .vid span { text-align: center; }
+  .videos-page h1 { text-align: center; padding: 24px 16px 0; font-size: clamp(1.4rem, 6vw, 2.4rem); }
+  .vidlist { margin: 20px auto 80px; font-size: 0.95rem; }
 }
 .watch { max-width: 960px; margin: 24px auto 80px; padding: 0 16px; }
 .watch video { width: 100%; max-height: 75vh; background: #000; display: block; }

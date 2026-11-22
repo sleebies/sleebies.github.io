@@ -9,79 +9,79 @@
   <script src="music.js"></script>
   <script src="videos.js"></script>
 </head>
-<body>
+<body class="videos-page">
   <h1>videos</h1>
   <!-- Videos live in the GitHub repo's videos folder (Neocities free can't host them).
-       Drop a file in there and the list (videos.js) builds itself. The title is the
-       file name, with _ and - turned into spaces. -->
-  <div class="vidlist" id="list"></div>
+       Drop a file in there and the list (videos.js) builds itself, newest first.
+       The title is the file name, with _ and - turned into spaces. -->
+  <table class="vidlist" id="list"></table>
+  <video class="vidpeek" id="peek" muted playsinline loop crossorigin="anonymous"></video>
   <div class="corner left"><a href="./">back</a></div>
 
   <script>
     const VIDEO_BASE = 'https://sleebies.github.io/videos/';
     const title = f => f.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+    const shortDate = d => { if (!d) return ''; const [y, m, day] = d.split('-'); return +m + '.' + +day + '.' + y.slice(2); };
     const list = document.getElementById('list');
+    const peek = document.getElementById('peek');
     const canHover = matchMedia('(hover: hover)').matches;
     const tell = msg => { if (parent !== window) parent.postMessage(msg, '*'); };
 
-    // hover audio goes through the same kind of low-pass filter the home music uses away from home
-    let ctx = null, filter = null;
-    function audioOut() {
-      if (ctx) return filter;
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return null;
-      ctx = new AC();
-      filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 500;
-      filter.Q.value = 0.7;
-      filter.connect(ctx.destination);
-      return filter;
-    }
-
-    if (!VIDEOS.length) list.innerHTML = '<p class="empty-note">coming soon</p>';
-    VIDEOS.forEach(file => {
+    if (!VIDEOS.length) list.outerHTML = '<p class="empty-note">coming soon</p>';
+    VIDEOS.forEach(v => {
+      const row = list.insertRow();
+      row.insertCell().textContent = shortDate(v.date);
       const a = document.createElement('a');
-      a.className = 'vid';
-      a.href = 'watch.html?v=' + encodeURIComponent(file);
-      const v = document.createElement('video');
-      v.crossOrigin = 'anonymous';
-      v.src = VIDEO_BASE + encodeURIComponent(file) + '#t=0.5';
-      v.preload = 'metadata';
-      v.muted = true;
-      v.playsInline = true;
-      v.loop = true;
-      const t = document.createElement('span');
-      t.textContent = title(file);
-      a.append(v, t);
-      list.appendChild(a);
-
-      if (!canHover) return;
-      let routed = false, timer = 0, gain = null;
-      a.addEventListener('mouseenter', () => {
-        tell({ sleepyz: 'duck', on: true });
-        const out = audioOut();
-        if (out && !routed) {
-          try {
-            gain = ctx.createGain();
-            gain.gain.value = 0;
-            ctx.createMediaElementSource(v).connect(gain).connect(out);
-            routed = true;
-          } catch (e) { /* no sound preview, still plays the picture */ }
-        }
-        if (ctx && ctx.state === 'suspended') ctx.resume();
-        if (gain) gain.gain.setTargetAtTime(1, ctx.currentTime, 0.5);   // video sound creeps in
-        v.muted = !routed;
-        v.currentTime = 0;
-        v.play().catch(() => { v.muted = true; v.play().catch(() => {}); });
-      });
-      a.addEventListener('mouseleave', () => {
-        tell({ sleepyz: 'duck', on: false });
-        if (gain) gain.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
-        clearTimeout(timer);
-        timer = setTimeout(() => { v.pause(); v.currentTime = 0.5; }, 400);
-      });
+      a.href = 'watch.html?v=' + encodeURIComponent(v.file);
+      a.textContent = title(v.file);
+      row.insertCell().appendChild(a);
+      if (canHover) {
+        a.addEventListener('mouseenter', () => preview(a, v.file));
+        a.addEventListener('mouseleave', stopPreview);
+      }
     });
+
+    // Hover: the home music fades out and a little preview plays next to the
+    // link, its sound muffled the same way the home music is away from home.
+    let ctx = null, gain = null, hideTimer = 0;
+    function audioOut() {
+      if (ctx) return true;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      try {
+        ctx = new AC();
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 500;
+        filter.Q.value = 0.7;
+        gain = ctx.createGain();
+        gain.gain.value = 0;
+        ctx.createMediaElementSource(peek).connect(gain).connect(filter).connect(ctx.destination);
+        return true;
+      } catch (e) { ctx = null; return false; }
+    }
+    function preview(a, file) {
+      clearTimeout(hideTimer);
+      tell({ sleepyz: 'duck', on: true });
+      const r = a.getBoundingClientRect();
+      peek.style.left = Math.min(r.right + 16, innerWidth - peek.offsetWidth - 8) + 'px';
+      peek.style.top = Math.max(8, Math.min(r.top - 40, innerHeight - 200)) + 'px';
+      const src = VIDEO_BASE + encodeURIComponent(file);
+      if (peek.dataset.file !== file) { peek.src = src; peek.dataset.file = file; }
+      peek.currentTime = 0;
+      peek.classList.add('show');
+      const sound = audioOut();
+      if (ctx && ctx.state === 'suspended') ctx.resume();
+      peek.muted = !sound;
+      if (gain) gain.gain.setTargetAtTime(1, ctx.currentTime, 0.5);   // its sound creeps in
+      peek.play().catch(() => { peek.muted = true; peek.play().catch(() => {}); });
+    }
+    function stopPreview() {
+      tell({ sleepyz: 'duck', on: false });
+      if (gain) gain.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
+      peek.classList.remove('show');
+      hideTimer = setTimeout(() => peek.pause(), 400);
+    }
   </script>
 </body>
 </html>
