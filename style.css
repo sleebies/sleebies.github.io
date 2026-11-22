@@ -172,6 +172,8 @@ body.mp-shell { overflow: hidden; }
 }
 /* hidden for now; delete a line to bring that button back */
 #mp-list-toggle { display: none; }
+/* the controls only show on the home page (music keeps playing, muffled, elsewhere) */
+body.mp-away #mp-bar { display: none; }
 #mp-bar button {
   background: none;
   border: 0;

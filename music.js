@@ -191,6 +191,7 @@
     }
     function setMuffle(on) {
       muffled = on;
+      document.body.classList.toggle('mp-away', on);   // style.css hides the controls off the home page
       if (filter) filter.frequency.setTargetAtTime(on ? 500 : 20000, ctx.currentTime, 0.25);
     }
     setMuffle(!isHome(location.href));
