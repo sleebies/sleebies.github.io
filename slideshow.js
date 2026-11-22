@@ -6,7 +6,6 @@ const IMAGES = [
   "20260605_104225.jpg",
   "260e5e2de9d3f3f7c8cb129b8a04c751.jpg",
   "31de54ab20ad7cb93ce05471bc2d86cb.webp",
-  "76b1d37632b200c95b95e509df739e27.png",
   "8b014d36ace85120f775d738a587d9b7.webp",
   "8bc3f33a457500999de94929259b2822.png",
   "99594604d2e9e54ea628df51229faeef.png",
