@@ -10,9 +10,39 @@
 </head>
 <body>
   <h1>videos</h1>
-  <nav class="links">
-    <span class="hint">coming soon</span>
-    <a href="./">back</a>
-  </nav>
+  <div class="gallery videos" id="gallery"></div>
+  <div class="corner left"><a href="./">back</a></div>
+
+  <script>
+    // Videos live in the GitHub repo's videos folder (Neocities free can't host them),
+    // same as the music. To add one, put it there and list it here:
+    //   { file: 'name.mp4', cap: 'words' }
+    // A YouTube video works too: { youtube: 'VIDEO_ID' } (the bit after watch?v=)
+    const VIDEO_BASE = 'https://sleebies.github.io/videos/';
+    const VIDEOS = [
+    ];
+
+    const g = document.getElementById('gallery');
+    if (!VIDEOS.length) g.outerHTML = '<p class="empty-note">coming soon</p>';
+    VIDEOS.forEach(v => {
+      const fig = document.createElement('div');
+      let el;
+      if (v.youtube) {
+        el = document.createElement('iframe');
+        el.src = 'https://www.youtube-nocookie.com/embed/' + v.youtube;
+        el.allow = 'encrypted-media; picture-in-picture; fullscreen';
+        el.loading = 'lazy';
+        el.title = v.cap || 'video';
+      } else {
+        el = document.createElement('video');
+        el.src = /^https?:/.test(v.file) ? v.file : VIDEO_BASE + v.file; el.controls = true; el.preload = 'metadata';
+        // pause the site music while a video plays
+        el.addEventListener('play', () => { try { parent.postMessage({ sleepyz: 'pause' }, '*'); } catch (e) {} });
+      }
+      fig.appendChild(el);
+      if (v.cap) { const c = document.createElement('div'); c.className = 'cap'; c.textContent = v.cap; fig.appendChild(c); }
+      g.appendChild(fig);
+    });
+  </script>
 </body>
 </html>

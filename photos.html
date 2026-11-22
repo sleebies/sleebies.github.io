@@ -10,9 +10,30 @@
 </head>
 <body>
   <h1>photos</h1>
-  <nav class="links">
-    <span class="hint">coming soon</span>
-    <a href="./">back</a>
-  </nav>
+  <div class="gallery" id="gallery"></div>
+  <div class="lightbox" id="lightbox"><img alt=""></div>
+  <div class="corner left"><a href="./">back</a></div>
+
+  <script>
+    // To add a photo: put it in the photos folder and list it here.
+    // Optional caption: { file: 'name.jpg', cap: 'words' }
+    const PHOTOS = [
+    ];
+
+    const g = document.getElementById('gallery');
+    const lb = document.getElementById('lightbox');
+    if (!PHOTOS.length) g.outerHTML = '<p class="empty-note">coming soon</p>';
+    PHOTOS.forEach(p => {
+      if (typeof p === 'string') p = { file: p };
+      const fig = document.createElement('div');
+      const img = document.createElement('img');
+      img.src = 'photos/' + p.file; img.alt = p.cap || ''; img.loading = 'lazy';
+      img.onclick = () => { lb.firstElementChild.src = img.src; lb.classList.add('show'); };
+      fig.appendChild(img);
+      if (p.cap) { const c = document.createElement('div'); c.className = 'cap'; c.textContent = p.cap; fig.appendChild(c); }
+      g.appendChild(fig);
+    });
+    lb.onclick = () => lb.classList.remove('show');
+  </script>
 </body>
 </html>
