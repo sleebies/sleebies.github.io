@@ -27,6 +27,7 @@
       </g>
     </svg>
   </button>
+  <div class="bubble" id="bubble" aria-live="polite"></div>
   <div class="corner left"><a href="socials.html">sleepyz</a></div>
 
   <script>
@@ -115,7 +116,37 @@
         );
       });
       setTimeout(() => { spinning = false; }, 1000);
+      say();
     });
+
+    // Crimson's voice lines: a bubble by the logo on click, and now and then on her own.
+    // Add, remove or rewrite lines here.
+    const LINES = [
+      "you again. good. it's quiet in here.",
+      "i used to smoke. i think. my hands remember it better than i do.",
+      "this slideshow beats every briefing i ever sat through.",
+      "don't poke the triangles. ...fine. poke the triangles.",
+      "systems green. mostly.",
+      "cockpits smell like coffee and fear. someone told me that once.",
+      "if you see a green flash, don't wave at it.",
+    ];
+    const bubble = document.getElementById('bubble');
+    let lineDeck = [], lastLine = -1, hideTimer;
+    function say() {
+      if (!lineDeck.length) {
+        lineDeck = LINES.map((_, i) => i).sort(() => Math.random() - 0.5);
+        if (lineDeck.length > 1 && lineDeck[lineDeck.length - 1] === lastLine) lineDeck.unshift(lineDeck.pop());
+      }
+      lastLine = lineDeck.pop();
+      bubble.textContent = LINES[lastLine];
+      bubble.classList.add('show');
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => bubble.classList.remove('show'), 5000);
+    }
+    // unprompted: every 40-90 seconds
+    (function idle() {
+      setTimeout(() => { if (!document.hidden) say(); idle(); }, 40000 + Math.random() * 50000);
+    })();
   </script>
 </body>
 </html>

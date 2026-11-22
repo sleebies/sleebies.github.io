@@ -213,6 +213,7 @@
         try { history.replaceState(null, '', e.data.href); } catch (err) {}
         setMuffle(!isHome(e.data.href));
       }
+      if (e.data.sleepyz === 'pause') audio.pause();   // a video on the page started playing
     });
 
     /* --- splash: the click that lets the browser play sound --- */
