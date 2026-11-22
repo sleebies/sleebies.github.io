@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="style.css">
   <script src="songs.js"></script>
   <script src="music.js"></script>
+  <script src="slideshow.js"></script>
+  <script src="crimson-lines.js"></script>
 </head>
 <body>
   <h1>welcome to sleepyz2002dotcom</h1>
@@ -31,39 +33,7 @@
   <div class="corner left"><a href="socials.html">sleepyz</a></div>
 
   <script>
-    // To add or remove slideshow pictures, put them in the slideshow folder and list them here.
-    const IMAGES = [
-      'brayden.jpg',
-      'clip.gif',
-      'cupcakez.png',
-      'dallas.jpg',
-      'doom.jpg',
-      'fone-linging.png',
-      'garden.jpg',
-      'goose-recluse.jpg',
-      'headset.jpg',
-      'hena.webp',
-      'jeffai.png',
-      'knee-surgery.jpg',
-      'panda-smoking.png',
-      'shaman-healer.png',
-      'skincat.jpg',
-      'sleepyzling.png',
-      'stop.jpg',
-      'unc.png',
-      'cool-baby.png',
-      'e-sex.png',
-      'garry-mod.jpg',
-      'goodbye-world.jpg',
-      'gort.png',
-      'map-pack.png',
-      'road.png',
-      'smarter-than-rats.jpg',
-      'spatula.png',
-      'steak-rarity.png',
-      'steal-his-look.png',
-      'weed-alien.jpg',
-    ];
+    // Pictures: just drop them in the slideshow folder (the list lives in slideshow.js).
     const SECONDS = 8;
 
     const box = document.getElementById('slideshow');
@@ -119,17 +89,8 @@
       say();
     });
 
-    // Crimson's voice lines: a bubble by the logo on click, and now and then on her own.
-    // Add, remove or rewrite lines here.
-    const LINES = [
-      "you again. good. it's quiet in here.",
-      "i used to smoke. i think. my hands remember it better than i do.",
-      "this slideshow beats every briefing i ever sat through.",
-      "don't poke the triangles. ...fine. poke the triangles.",
-      "systems green. mostly.",
-      "cockpits smell like coffee and fear. someone told me that once.",
-      "if you see a green flash, don't wave at it.",
-    ];
+    // Crimson's voice lines live in crimson-lines.js (one line per row). Edit that file.
+    const LINES = CRIMSON_LINES.split('\n').map(l => l.trim()).filter(Boolean);
     const bubble = document.getElementById('bubble');
     let lineDeck = [], lastLine = -1, hideTimer;
     function say() {
