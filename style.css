@@ -257,3 +257,6 @@ body.mp-away #mp-bar { display: none; }
 }
 #mp-splash.gone { opacity: 0; pointer-events: none; }
 #mp-enter { font-size: clamp(1.3rem, 5vw, 1.8rem); text-transform: lowercase; }
+
+/* divine class reads in crimson red */
+.profile .divine { color: #ff0000; }
