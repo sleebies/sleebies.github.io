@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>sleepyz2002</title>
   <link rel="stylesheet" href="style.css">
+  <script src="songs.js"></script>
+  <script src="music.js"></script>
 </head>
 <body>
   <h1>welcome to sleepyz2002dotcom</h1>
@@ -48,6 +50,19 @@
       'sleepyzling.png',
       'stop.jpg',
       'unc.png',
+      'cool-baby.png',
+      'depression-joke.png',
+      'e-sex.png',
+      'garry-mod.jpg',
+      'goodbye-world.jpg',
+      'gort.png',
+      'map-pack.png',
+      'road.png',
+      'smarter-than-rats.jpg',
+      'spatula.png',
+      'steak-rarity.png',
+      'steal-his-look.png',
+      'weed-alien.jpg',
     ];
     const SECONDS = 8;
 
@@ -59,12 +74,27 @@
       box.appendChild(img);
       return img;
     });
-    let current = Math.floor(Math.random() * imgs.length);
+    // Shuffled deck: every picture shows once before any repeats, and a new
+    // deck never starts with the picture that was just on screen.
+    let deck = [];
+    function draw(last) {
+      if (!deck.length) {
+        deck = imgs.map((_, i) => i);
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        if (deck.length > 1 && deck[deck.length - 1] === last) {
+          [deck[0], deck[deck.length - 1]] = [deck[deck.length - 1], deck[0]];
+        }
+      }
+      return deck.pop();
+    }
+    let current = draw(-1);
     imgs[current].classList.add('on');
     if (imgs.length > 1) {
       setInterval(() => {
-        let next;
-        do { next = Math.floor(Math.random() * imgs.length); } while (next === current);
+        const next = draw(current);
         imgs[current].classList.remove('on');
         imgs[next].classList.add('on');
         current = next;

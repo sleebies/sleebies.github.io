@@ -1,4 +1,4 @@
-# Publishes the site to Neocities (sleepyz2002.neocities.org) on every push to main.
+# Publishes the site (not the music folder: Neocities free can't host mp3s, the player streams them from GitHub Pages) to Neocities (sleepyz2002.neocities.org) on every push to main.
 # Needs a repo secret named NEOCITIES_API_TOKEN (your Neocities API key).
 name: Deploy to Neocities
 
@@ -21,7 +21,7 @@ jobs:
       - name: Collect site files
         run: |
           mkdir _site
-          cp *.html *.css _site/
+          cp *.html *.css *.js _site/
           cp -r slideshow souls _site/
 
       - name: Upload to Neocities
