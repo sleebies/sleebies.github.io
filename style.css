@@ -317,18 +317,8 @@ body.mp-away #mp-bar { display: none; }
 .vidlist td { padding: 2px 6px; vertical-align: top; }
 .vidlist td:first-child { color: #ccc; white-space: nowrap; }
 .vidlist a:hover { color: #ff0000; }
-.vidpeek {
-  position: fixed;
-  width: 280px;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background: #111;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  z-index: 3;
-}
-.vidpeek.show { opacity: 1; }
+/* hidden player: hovering a title plays only its sound */
+.vidpeek { position: fixed; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 @media (max-width: 600px) {
   .videos-page h1 { text-align: center; padding: 24px 16px 0; font-size: clamp(1.4rem, 6vw, 2.4rem); }
   .vidlist { margin: 20px auto 80px; font-size: 0.95rem; }

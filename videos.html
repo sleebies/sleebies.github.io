@@ -41,8 +41,8 @@
       }
     });
 
-    // Hover: the home music fades out and a little preview plays next to the
-    // link, its sound muffled the same way the home music is away from home.
+    // Hover: the home music fades out and the video's sound plays (no picture),
+    // muffled the same way the home music is away from home.
     let ctx = null, gain = null, hideTimer = 0;
     function audioOut() {
       if (ctx) return true;
@@ -63,13 +63,9 @@
     function preview(a, file) {
       clearTimeout(hideTimer);
       tell({ sleepyz: 'duck', on: true });
-      const r = a.getBoundingClientRect();
-      peek.style.left = Math.min(r.right + 16, innerWidth - peek.offsetWidth - 8) + 'px';
-      peek.style.top = Math.max(8, Math.min(r.top - 40, innerHeight - 200)) + 'px';
       const src = VIDEO_BASE + encodeURIComponent(file);
       if (peek.dataset.file !== file) { peek.src = src; peek.dataset.file = file; }
       peek.currentTime = 0;
-      peek.classList.add('show');
       const sound = audioOut();
       if (ctx && ctx.state === 'suspended') ctx.resume();
       peek.muted = !sound;
@@ -79,7 +75,6 @@
     function stopPreview() {
       tell({ sleepyz: 'duck', on: false });
       if (gain) gain.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
-      peek.classList.remove('show');
       hideTimer = setTimeout(() => peek.pause(), 400);
     }
   </script>
