@@ -127,3 +127,121 @@ a { color: #fff; text-decoration: none; text-transform: lowercase; }
   border: 2px dashed #444;
 }
 .profile .hint { text-align: center; }
+
+/* glitched status: drawn boxes so it looks broken the same way in every browser */
+.glitch { display: inline-flex; gap: 1px; vertical-align: middle; }
+.glitch i {
+  display: inline-block;
+  width: 0.45em;
+  height: 0.8em;
+  border: 1px solid currentColor;
+}
+/* "?" replacement glyph in the empty picture box */
+.profile .portrait.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+  font-size: 1.4rem;
+}
+.profile dd { line-height: 1.5; }
+
+/* ---------- music player (restyle freely; every control id starts with mp-) ---------- */
+body.mp-shell { overflow: hidden; }
+#mp-page {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+/* small line of text floating at the bottom centre, over the page */
+#mp-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 200px);   /* stays clear of "go to sleepyz" and the logo */
+  font-size: 11px;
+  color: #fff;
+  white-space: nowrap;
+}
+/* hidden for now; delete a line to bring that button back */
+#mp-prev, #mp-play, #mp-next, #mp-muffle, #mp-list-toggle { display: none; }
+#mp-bar button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-transform: lowercase;
+  cursor: pointer;
+  padding: 0;
+}
+#mp-title { text-transform: lowercase; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+#mp-cur, #mp-dur { font-variant-numeric: tabular-nums; }
+#mp-mute { display: flex; width: 12px; height: 12px; }
+#mp-mute svg { width: 100%; height: 100%; }
+#mp-mute.on .mp-waves { display: none; }
+#mp-muffle.on { color: #ff0000; }
+
+/* thin white line with a small dot */
+#mp-bar input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  margin: 0;
+  height: 10px;
+  cursor: pointer;
+}
+#mp-seek { width: 40px; }
+#mp-volume { width: 24px; }
+#mp-bar input[type=range]::-webkit-slider-runnable-track { height: 1px; background: #fff; }
+#mp-bar input[type=range]::-moz-range-track { height: 1px; background: #fff; }
+#mp-bar input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px; height: 4px; margin-top: -1.5px;
+  border-radius: 50%; background: #fff; border: 0;
+}
+#mp-bar input[type=range]::-moz-range-thumb { width: 4px; height: 4px; border-radius: 50%; background: #fff; border: 0; }
+
+#mp-list {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(360px, 90vw);
+  max-height: 50vh;
+  overflow-y: auto;
+  margin: 0 0 8px;
+  padding: 8px 8px 8px 40px;
+  background: #000;
+  border: 1px solid #333;
+  text-align: left;
+  white-space: normal;
+}
+#mp-list li { padding: 3px 0; cursor: pointer; }
+#mp-list li.on { color: #ff0000; }
+#mp-list[hidden] { display: none; }
+
+/* phones: the corners are tight, so the bar sits above them */
+@media (max-width: 600px) {
+  #mp-bar { bottom: 84px; max-width: calc(100vw - 32px); }
+}
+/* splash screen: the click that lets the browser play music */
+#mp-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  cursor: pointer;
+  transition: opacity 1.5s ease;
+}
+#mp-splash.gone { opacity: 0; pointer-events: none; }
+#mp-enter { font-size: clamp(1.3rem, 5vw, 1.8rem); text-transform: lowercase; }
