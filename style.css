@@ -319,3 +319,4 @@ body.mp-away #mp-bar { display: none; }
 
 /* divine class reads in crimson red */
 .profile .divine { color: #ff0000; }
+.profile dd p { margin: 0 0 10px; }
