@@ -9,35 +9,59 @@
   <script src="music.js"></script>
   <script src="photos.js"></script>
 </head>
-<body class="corkboard-page">
+<body class="photos-page">
   <h1>photos</h1>
-  <!-- Photos: drop them in the photos folder. The list (photos.js) builds itself. -->
-  <div class="corkboard" id="board"></div>
+  <div class="scatter" id="scatter"></div>
+  <div class="unplaced" id="unplaced"></div>
   <div class="lightbox" id="lightbox"><img alt=""></div>
   <div class="corner left"><a href="./">back</a></div>
 
   <script>
-    const board = document.getElementById('board');
+    // Where each photo sits, in % of the screen width: [left, top, width].
+    // "wide" is computers, "phone" is narrow screens. Photos are the original
+    // files, untouched; the browser only scales them to fit.
+    // A photo with no spot here still shows up, just below the others.
+    const LAYOUT = {
+      'sonabrycethingfuckidk.png': { wide: [26.1, 4.7, 13.5], phone: [30, 4, 66] },
+      'ufo-ocean.png':             { wide: [16.4, 9.3, 11.5], phone: [4, 42, 58] },
+      'hicj.png':                  { wide: [57, 7, 11.95],    phone: [40, 92, 56] },
+      'sapper-screen.png':         { wide: [36.5, 16, 12.4],  phone: [4, 164, 58] },
+      'gmod-signal-logo.png':      { wide: [33.6, 27.4, 11.7], phone: [18, 218, 64] },
+      'signal-intro-card.png':     { wide: [30.9, 32.3, 16.5], phone: [10, 241, 80] },
+      'tat.png':                   { wide: [53, 27.3, 15.35], phone: [14, 309, 72] },
+    };
+
+    const scatter = document.getElementById('scatter');
+    const unplaced = document.getElementById('unplaced');
     const lb = document.getElementById('lightbox');
-    // same file always lands at the same tilt, so the board doesn't reshuffle on every visit
-    function hash(s) { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return (h >>> 0) / 4294967296; }
-    if (!PHOTOS.length) board.innerHTML = '<p class="empty-note">nothing pinned yet</p>';
+    const placed = [];
     PHOTOS.forEach(name => {
-      const r = hash(name), r2 = hash(name + '!');
-      const pin = document.createElement('figure');
-      pin.className = 'pinned';
-      pin.style.setProperty('--tilt', ((r - 0.5) * 14).toFixed(1) + 'deg');
-      pin.style.setProperty('--nudge', ((r2 - 0.5) * 30).toFixed(0) + 'px');
-      pin.style.setProperty('--pin', (35 + r2 * 30).toFixed(0) + '%');
       const img = document.createElement('img');
       img.src = 'photos/' + encodeURIComponent(name);
       img.alt = '';
-      img.loading = 'lazy';
-      pin.appendChild(img);
-      pin.onclick = () => { lb.firstElementChild.src = img.src; lb.classList.add('show'); };
-      board.appendChild(pin);
+      img.onclick = () => { lb.firstElementChild.src = img.src; lb.classList.add('show'); };
+      if (LAYOUT[name]) { img.dataset.name = name; placed.push(img); scatter.appendChild(img); }
+      else unplaced.appendChild(img);
     });
     lb.onclick = () => lb.classList.remove('show');
+
+    const narrow = matchMedia('(max-width: 700px)');
+    function arrange() {
+      const key = narrow.matches ? 'phone' : 'wide';
+      let bottom = 0;
+      placed.forEach(img => {
+        const [x, y, w] = LAYOUT[img.dataset.name][key];
+        img.style.left = x + 'vw';
+        img.style.top = y + 'vw';
+        img.style.width = w + 'vw';
+        const ratio = img.naturalWidth ? img.naturalHeight / img.naturalWidth : 0.75;
+        bottom = Math.max(bottom, y + w * ratio);
+      });
+      scatter.style.height = (bottom + 4) + 'vw';
+    }
+    narrow.addEventListener('change', arrange);
+    placed.forEach(img => img.addEventListener('load', arrange));
+    arrange();
   </script>
 </body>
 </html>
