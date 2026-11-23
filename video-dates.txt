@@ -1,0 +1,8 @@
+# When each video was made. One line per video: file name = year-month-day
+# Videos not listed here use the date saved inside the file, or else the day they were added.
+fucking_idiot_real.mp4 = 2026-05-02
+instickill_2_preview.mp4 = 2026-04-30
+real_shep_dance.mp4 = 2026-10-03
+ts_bside_tease.mp4 = 2026-04-17
+ts_bside_tease_2.mp4 = 2026-04-23
+ts_bside_tease_3.mp4 = 2026-05-14

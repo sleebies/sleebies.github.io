@@ -52,6 +52,14 @@
         a.target = '_blank';
         a.rel = 'noopener';
       }
+      // Our own pages: check with the server before going, so the browser
+      // doesn't show an old saved copy of the page.
+      else if (a.origin === location.origin && a.pathname !== location.pathname && !a.hasAttribute('download')
+               && !e.defaultPrevented && e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && window.fetch) {
+        e.preventDefault();
+        var go = function () { location.href = a.href; };
+        fetch(a.href, { cache: 'no-cache' }).then(go, go);
+      }
     }, true);
     return;
   }
