@@ -326,3 +326,4 @@ body.mp-away #mp-bar { display: none; }
 .watch { max-width: 960px; margin: 24px auto 80px; padding: 0 16px; }
 .watch video { width: 100%; max-height: 75vh; background: #000; display: block; }
 .profile dd.nodata { color: #666; }
+.profile .portrait.pixel { image-rendering: pixelated; }
