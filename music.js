@@ -16,6 +16,27 @@
   var script = document.currentScript;
   var SITE_ROOT = new URL('.', script.src).href;
 
+  /* ---------- stay fresh after a deploy ----------
+   * Neocities sends no cache rules, so a browser can keep showing an old copy
+   * of a page for a while. Each deploy writes version.txt and tags every page
+   * with <meta name="build">. If they don't match, fetch the page again for
+   * real and reload once. */
+  function freshen() {
+    if (!window.fetch) return;
+    var tag = document.querySelector('meta[name="build"]');
+    fetch(SITE_ROOT + 'version.txt', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (v) {
+        v = v.trim();
+        if (!v || (tag && tag.content === v)) return;
+        var key = 'mp-fresh-' + v + location.pathname;
+        try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) { return; }
+        fetch(location.href, { cache: 'reload' }).then(function () { location.reload(); });
+      })
+      .catch(function () {});
+  }
+  freshen();
+
   /* ---------- inside the frame: just report where we are ---------- */
   if (window.top !== window) {
     var report = function () {
@@ -68,7 +89,11 @@
 
     var $ = function (id) { return document.getElementById(id); };
     var frame = $('mp-page');
-    frame.src = location.href;
+    // Re-check the page with the server first, so the frame never shows a stale copy.
+    var openFrame = function () { if (!frame.src) frame.src = location.href; };
+    if (window.fetch) fetch(location.href, { cache: 'no-cache' }).then(openFrame, openFrame);
+    else openFrame();
+    setTimeout(openFrame, 3000);
 
     var audio = new Audio();
     window.sleepyzAudio = audio;   // handy for poking at it from the console
