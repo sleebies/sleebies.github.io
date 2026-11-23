@@ -27,6 +27,13 @@ jobs:
           mkdir _site
           cp *.html *.css *.js _site/
           cp -r slideshow souls images photos _site/
+          # Neocities sends no cache rules, so browsers keep old copies for a while.
+          # Tag every page and its local scripts/styles with this build so they refresh.
+          V=${GITHUB_SHA::8}
+          echo "$V" > _site/version.txt
+          find _site -name '*.html' -exec sed -i -E \
+            -e "s#(<(script|link)[^>]*(src|href)=\"[^\":]+\.(js|css))\"#\1?v=$V\"#g" \
+            -e "s#<head>#<head>\n  <meta name=\"build\" content=\"$V\">#" {} +
 
       - name: Upload to Neocities
         uses: bcomnes/deploy-to-neocities@v3
