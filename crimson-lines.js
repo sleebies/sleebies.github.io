@@ -12,4 +12,5 @@ you could visit five or six stores, or just one.
 do you suck dicks!? let me see your war face!
 watch it, dude.
 totally not a virus, trust me, i'm a dolphin
+get off the game, go to the bathroom and take a SHIT. i can SMELL YOU
 `;
